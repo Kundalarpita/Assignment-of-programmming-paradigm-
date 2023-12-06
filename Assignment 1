@@ -1,0 +1,86 @@
+#include<iostream>
+
+class WeatherReport {
+private:
+    int day_of_month;
+    int high_temp;
+    int low_temp;
+    float amount_rain;
+    float amount_snow;
+
+public:
+    // Constructor with default values
+    WeatherReport() : day_of_month(99), high_temp(999), low_temp(-999), amount_rain(0), amount_snow(0) {}
+
+    // Function to input data from the user
+    void inputData() {
+        std::cout << "Enter day of the month: ";
+        std::cin >> day_of_month;
+
+        std::cout << "Enter high temperature: ";
+        std::cin >> high_temp;
+
+        std::cout << "Enter low temperature: ";
+        std::cin >> low_temp;
+
+        std::cout << "Enter amount of rain: ";
+        std::cin >> amount_rain;
+
+        std::cout << "Enter amount of snow: ";
+        std::cin >> amount_snow;
+    }
+
+    // Function to display the weather report
+    void displayReport() {
+        std::cout << "Day of the month: " << day_of_month << std::endl;
+        std::cout << "High temperature: " << high_temp << std::endl;
+        std::cout << "Low temperature: " << low_temp << std::endl;
+        std::cout << "Amount of rain: " << amount_rain << std::endl;
+        std::cout << "Amount of snow: " << amount_snow << std::endl;
+    }
+};
+
+int main() {
+    WeatherReport monthlyReport[30];  // Assuming a month with a maximum of 30 days
+    int choice;
+    int day;
+
+    do {
+        // Display menu
+        std::cout << "\nMenu: \n1. Enter data \n2. Display report \n3. Exit\n";
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1:
+                std::cout << "Enter the day for which you want to enter data (1-30): ";
+                std::cin >> day;
+
+                // Validate day input
+                if (day >= 1 && day <= 30) {
+                    monthlyReport[day - 1].inputData();
+                    std::cout << "Data entered for day " << day << std::endl;
+                } else {
+                    std::cout << "Invalid day. Please enter a day between 1 and 30.\n";
+                }
+                break;
+
+            case 2:
+                for (int i = 0; i < 30; ++i) {
+                    std::cout << "\nWeather report for day " << i + 1 << ":\n";
+                    monthlyReport[i].displayReport();
+                }
+                break;
+
+            case 3:
+                std::cout << "Exiting program.\n";
+                break;
+
+            default:
+                std::cout << "Invalid choice. Please enter a valid option.\n";
+        }
+
+    } while (choice != 3);
+
+    return 0;
+}
