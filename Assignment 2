@@ -1,0 +1,124 @@
+#include <iostream>
+#include <cstring>
+
+class StringOperations {
+private:
+    char* str;
+
+public:
+    // Constructor
+    StringOperations(const char* initialStr = "") {
+        str = new char[strlen(initialStr) + 1];
+        strcpy(str, initialStr);
+    }
+
+    // Destructor
+    ~StringOperations() {
+        delete[] str;
+    }
+
+    // = Equality operator overloading
+    bool operator=(const StringOperations& other) {
+        return (strcmp(str, other.str) == 0);
+    }
+
+    // == String Copy operator overloading
+    void operator==(const StringOperations& other) {
+        delete[] str;
+        str = new char[strlen(other.str) + 1];
+        strcpy(str, other.str);
+    }
+
+    // + Concatenation operator overloading
+    StringOperations operator+(const StringOperations& other) {
+        char* result = new char[strlen(str) + strlen(other.str) + 1];
+        strcpy(result, str);
+        strcat(result, other.str);
+        return StringOperations(result);
+    }
+
+    // << Display a string operator overloading
+    friend std::ostream& operator<<(std::ostream& os, const StringOperations& obj) {
+        os << obj.str;
+        return os;
+    }
+
+    // >> Reverse a string operator overloading
+    friend std::istream& operator>>(std::istream& is, StringOperations& obj) {
+        char* reversed = new char[strlen(obj.str) + 1];
+        int length = strlen(obj.str);
+
+        for (int i = 0; i < length; ++i) {
+            reversed[i] = obj.str[length - i - 1];
+        }
+
+        reversed[length] = '\0';
+        delete[] obj.str;
+        obj.str = reversed;
+
+        return is;
+    }
+
+    // Function to determine whether a string is a palindrome
+    bool isPalindrome() {
+        int length = strlen(str);
+        for (int i = 0; i < length / 2; ++i) {
+            if (str[i] != str[length - i - 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Function to find the occurrence of a sub-string
+    int findOccurrence(const char* subStr) {
+        int count = 0;
+        char* ptr = strstr(str, subStr);
+        while (ptr != nullptr) {
+            ++count;
+            ptr = strstr(ptr + 1, subStr);
+        }
+        return count;
+    }
+};
+
+int main() {
+    StringOperations str1("Hello");
+    StringOperations str2("World");
+
+    // = Equality
+    if (str1 = str2) {
+        std::cout << "Strings are equal.\n";
+    } else {
+        std::cout << "Strings are not equal.\n";
+    }
+
+    // == String Copy
+    str1 == str2;
+    std::cout << "Copied string: " << str1 << std::endl;
+
+    // + Concatenation
+    StringOperations result = str1 + str2;
+    std::cout << "Concatenated string: " << result << std::endl;
+
+    // << Display a string
+    std::cout << "Original string: " << str1 << std::endl;
+
+    // >> Reverse a string
+    std::cin >> str1;
+    std::cout << "Reversed string: " << str1 << std::endl;
+
+    // Function to determine whether a string is a palindrome
+    if (str1.isPalindrome()) {
+        std::cout << "The string is a palindrome.\n";
+    } else {
+        std::cout << "The string is not a palindrome.\n";
+    }
+
+    // Function to find occurrence of a sub-string
+    const char* subStr = "l";
+    int occurrence = str1.findOccurrence(subStr);
+    std::cout << "Occurrence of '" << subStr << "': " << occurrence << std::endl;
+
+    return 0;
+}
