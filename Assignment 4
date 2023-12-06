@@ -1,0 +1,163 @@
+#include <iostream>
+#include <cstring>
+
+class Person {
+private:
+    char* name;
+    char* dob;
+    char* bloodGroup;
+    float height;
+    float weight;
+    long insurancePolicyNumber;
+    char* contactAddress;
+    long phoneNumber;
+    long drivingLicenseNumber;
+
+public:
+    // Default constructor
+    Person() {
+        name = dob = bloodGroup = contactAddress = nullptr;
+        height = weight = 0.0;
+        insurancePolicyNumber = phoneNumber = drivingLicenseNumber = 0;
+    }
+
+    // Parameterized constructor
+    Person(const char* n, const char* d, const char* bg, float h, float w, long insurance, const char* address, long phone, long license) {
+        name = new char[strlen(n) + 1];
+        strcpy(name, n);
+
+        dob = new char[strlen(d) + 1];
+        strcpy(dob, d);
+
+        bloodGroup = new char[strlen(bg) + 1];
+        strcpy(bloodGroup, bg);
+
+        height = h;
+        weight = w;
+        insurancePolicyNumber = insurance;
+
+        contactAddress = new char[strlen(address) + 1];
+        strcpy(contactAddress, address);
+
+        phoneNumber = phone;
+        drivingLicenseNumber = license;
+    }
+
+    // Copy constructor
+    Person(const Person& other) {
+        name = new char[strlen(other.name) + 1];
+        strcpy(name, other.name);
+
+        dob = new char[strlen(other.dob) + 1];
+        strcpy(dob, other.dob);
+
+        bloodGroup = new char[strlen(other.bloodGroup) + 1];
+        strcpy(bloodGroup, other.bloodGroup);
+
+        height = other.height;
+        weight = other.weight;
+        insurancePolicyNumber = other.insurancePolicyNumber;
+
+        contactAddress = new char[strlen(other.contactAddress) + 1];
+        strcpy(contactAddress, other.contactAddress);
+
+        phoneNumber = other.phoneNumber;
+        drivingLicenseNumber = other.drivingLicenseNumber;
+    }
+
+    // Destructor
+    ~Person() {
+        delete[] name;
+        delete[] dob;
+        delete[] bloodGroup;
+        delete[] contactAddress;
+    }
+
+    // Static member function
+    static void displayStaticInfo() {
+        std::cout << "This is a static member function." << std::endl;
+    }
+
+    // Friend class
+    friend class FriendClass;
+
+    // Member function to display information
+    void displayInfo() {
+        std::cout << "Name: " << name << std::endl;
+        std::cout << "Date of Birth: " << dob << std::endl;
+        std::cout << "Blood Group: " << bloodGroup << std::endl;
+        std::cout << "Height: " << height << std::endl;
+        std::cout << "Weight: " << weight << std::endl;
+        std::cout << "Insurance Policy Number: " << insurancePolicyNumber << std::endl;
+        std::cout << "Contact Address: " << contactAddress << std::endl;
+        std::cout << "Phone Number: " << phoneNumber << std::endl;
+        std::cout << "Driving License Number: " << drivingLicenseNumber << std::endl;
+    }
+
+    // Operator overloading with this pointer
+    Person operator+(const Person& other) {
+        Person result;
+        result.height = this->height + other.height;
+        result.weight = this->weight + other.weight;
+        return result;
+    }
+
+    // Dynamic memory allocation operators
+    void* operator new(size_t size) {
+        std::cout << "Overloaded new operator called." << std::endl;
+        return ::new char[size];
+    }
+
+    void operator delete(void* ptr) {
+        std::cout << "Overloaded delete operator called." << std::endl;
+        delete[] static_cast<char*>(ptr);
+    }
+};
+
+// Friend class definition
+class FriendClass {
+public:
+    void displayFriendInfo(const Person& person) {
+        std::cout << "Friend Class Access:" << std::endl;
+        std::cout << "Name: " << person.name << std::endl;
+        std::cout << "Date of Birth: " << person.dob << std::endl;
+        std::cout << "Blood Group: " << person.bloodGroup << std::endl;
+        std::cout << "Insurance Policy Number: " << person.insurancePolicyNumber << std::endl;
+    }
+};
+
+int main() {
+    // Using default constructor
+    Person defaultPerson;
+
+    // Using parameterized constructor
+    Person person1("John Doe", "01-01-1990", "A+", 175.5, 68.5, 123456, "123 Main St", 9876543210, 987654);
+
+    // Using copy constructor
+    Person person2 = person1;
+
+    // Display information
+    std::cout << "Person 1:" << std::endl;
+    person1.displayInfo();
+
+    std::cout << "\nPerson 2 (Copy of Person 1):" << std::endl;
+    person2.displayInfo();
+
+    // Static member function
+    Person::displayStaticInfo();
+
+    // Friend class
+    FriendClass friendObj;
+    friendObj.displayFriendInfo(person1);
+
+    // Operator overloading with this pointer
+    Person resultPerson = person1 + person2;
+    std::cout << "\nResult of Operator Overloading with this pointer:" << std::endl;
+    resultPerson.displayInfo();
+
+    // Dynamic memory allocation operators
+    Person* dynamicPerson = new Person("Dynamic", "01-01-2000", "B-", 180.0, 75.0, 654321, "456 Dynamic St", 1234567890, 123456);
+    delete dynamicPerson;
+
+    return 0;
+}
