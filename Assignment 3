@@ -1,0 +1,80 @@
+#include<iostream>
+#include<cstring>
+
+class Book {
+private:
+    char* author;
+    char* title;
+    float price;
+    char* publisher;
+    int stockPosition;
+
+public:
+    // Constructor to initialize member variables
+    Book(const char* author, const char* title, float price, const char* publisher, int stockPosition) {
+        this->author = new char[strlen(author) + 1];
+        strcpy(this->author, author);
+
+        this->title = new char[strlen(title) + 1];
+        strcpy(this->title, title);
+
+        this->price = price;
+
+        this->publisher = new char[strlen(publisher) + 1];
+        strcpy(this->publisher, publisher);
+
+        this->stockPosition = stockPosition;
+    }
+
+    // Destructor to free memory
+    ~Book() {
+        delete[] author;
+        delete[] title;
+        delete[] publisher;
+    }
+
+    // Function to display book details
+    void displayDetails() {
+        std::cout << "Author: " << author << std::endl;
+        std::cout << "Title: " << title << std::endl;
+        std::cout << "Price: " << price << std::endl;
+        std::cout << "Publisher: " << publisher << std::endl;
+        std::cout << "Stock Position: " << stockPosition << std::endl;
+    }
+
+    // Function to check availability and calculate total cost
+    void processOrder(int requestedCopies) {
+        if (requestedCopies <= stockPosition) {
+            std::cout << "Book is available. Enter the number of copies required: ";
+            int copies;
+            std::cin >> copies;
+
+            if (copies <= stockPosition) {
+                float totalCost = copies * price;
+                std::cout << "Total cost for " << copies << " copies: " << totalCost << std::endl;
+                stockPosition -= copies;
+            } else {
+                std::cout << "Required copies not in stock." << std::endl;
+            }
+        } else {
+            std::cout << "Book is not available." << std::endl;
+        }
+    }
+};
+
+int main() {
+    // Example usage
+    Book book1("John Doe", "Sample Book", 19.99, "Sample Publisher", 50);
+
+    // Display book details
+    book1.displayDetails();
+
+    // Process an order
+    int requestedCopies;
+    std::cout << "Enter the number of copies required: ";
+    std::cin >> requestedCopies;
+
+    book1.processOrder(requestedCopies);
+
+    return 0;
+}
